@@ -1,4 +1,4 @@
-package utils;
+package api_tests.utils;
 
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;

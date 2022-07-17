@@ -1,7 +1,6 @@
-package utils;
+package api_tests.utils;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -9,7 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dto.User;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +36,8 @@ public final class JsonUtils {
     public static <T> List<T> getListOfDto(String json, Class<T> classType) {
         List<T> dto = null;
         try {
-            dto = objectMapper.readValue(json, new TypeReference<List<T>>(){});
+            dto = objectMapper.readValue(json, new TypeReference<List<T>>() {
+            });
 
         } catch (JsonParseException e) {
             LOG.error("Unable to parse jsonString to dto. Invalid type content: ", e);
@@ -49,8 +49,7 @@ public final class JsonUtils {
         return dto;
     }
 
-    public static String getJson(User user) throws JsonProcessingException {
-        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(user);
-
+    public static ObjectWriter getObjectWriter() throws JsonProcessingException {
+        return objectMapper.writerWithDefaultPrettyPrinter();
     }
 }
