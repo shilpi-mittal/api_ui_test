@@ -1,4 +1,4 @@
-package utils;
+package common_utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +20,7 @@ public abstract class TestEnvironmentUtils {
         loadPropertiesFile(environment + ".properties");
     }
 
-    private static void loadPropertiesFile(String propertyFileName) {
+    public static void loadPropertiesFile(String propertyFileName) {
         try {
             InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(propertyFileName);
             // load a properties file from resources directory

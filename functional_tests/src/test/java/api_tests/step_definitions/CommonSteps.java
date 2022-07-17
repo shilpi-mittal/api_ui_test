@@ -3,7 +3,7 @@ package api_tests.step_definitions;
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.Given;
-import utils.TestEnvironmentUtils;
+import common_utils.TestEnvironmentUtils;
 
 public class CommonSteps {
 

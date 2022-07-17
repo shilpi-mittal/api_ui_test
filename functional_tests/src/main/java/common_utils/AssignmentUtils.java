@@ -1,4 +1,4 @@
-package utils;
+package common_utils;
 
 // holds utils for value assignment
 public class AssignmentUtils {

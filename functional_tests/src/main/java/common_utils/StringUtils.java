@@ -1,4 +1,4 @@
-package utils;
+package common_utils;
 
 // holds utils for string manipulation
 public class StringUtils {

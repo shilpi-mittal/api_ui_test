@@ -1,4 +1,4 @@
-package dto;
+package api_tests.dto;
 
 
 // maps to Company in User

@@ -16,6 +16,8 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'ch.qos.logback:logback-core:1.2.11'
     implementation 'ch.qos.logback:logback-classic:1.2.11'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.3.0'
+    implementation 'io.github.bonigarcia:webdrivermanager:5.2.1'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testImplementation 'io.cucumber:cucumber-java:7.0.0'
@@ -34,16 +36,18 @@ configurations {
     }
 }
 
-def cucumberOptions = ['--plugin', 'pretty', '--glue', 'api_tests/step_definitions', 'src/test/java']
+def cucumberOptionsAPI = ['--plugin', 'pretty', '--glue', 'api_tests/step_definitions', 'src/test/java/api_tests']
+def cucumberOptionsUI = ['--plugin', 'pretty', '--glue', 'ui_tests/step_definitions', 'src/test/java/ui_tests']
 def cucumberThreadsOption = ['--threads', "4"]
 
 def setParallel = System.properties.getProperty("parallel", "false")
 def tags = System.properties.getProperty("tags", "")
 def test_env = System.properties.getProperty("test_env", "local")
 def test_log_level = System.properties.getProperty("test_log_level", "DEBUG")
+def test_browser = System.properties.getProperty("test_browser", "chrome")
 
-// runs all tests. If parallel cmd arg is true then all scenarios are run on parallel threads, else sequentially
-task all_api_tests() {
+// runs all UI acceptance tests. If parallel cmd arg is true then all scenarios are run on parallel threads, else sequentially
+task ui_acceptance_tests() {
     dependsOn assemble, testClasses
     doLast {
         javaexec {
@@ -51,13 +55,15 @@ task all_api_tests() {
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
             systemProperty 'test_env', test_env
             systemProperty 'test_log_level', test_log_level
-            if (setParallel == "true") cucumberOptions.addAll(cucumberThreadsOption)
-            args = cucumberOptions
+            systemProperty 'test_browser', test_browser
+            cucumberOptionsUI.addAll(['--tags', '@acceptance_test'])
+            if (setParallel == "true") cucumberOptionsUI.addAll(cucumberThreadsOption)
+            args = cucumberOptionsUI
         }
     }
 }
 
-// runs all acceptance tests. If parallel cmd arg is true then all scenarios are run on parallel threads, else sequentially
+// runs all API acceptance tests. If parallel cmd arg is true then all scenarios are run on parallel threads, else sequentially
 task api_acceptance_tests() {
     dependsOn assemble, testClasses
     doLast {
@@ -66,9 +72,9 @@ task api_acceptance_tests() {
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
             systemProperty 'test_env', test_env
             systemProperty 'test_log_level', test_log_level
-            cucumberOptions.addAll(['--tags', '@acceptance_test'])
-            if (setParallel == "true") cucumberOptions.addAll(cucumberThreadsOption)
-            args = cucumberOptions
+            cucumberOptionsAPI.addAll(['--tags', '@acceptance_test'])
+            if (setParallel == "true") cucumberOptionsAPI.addAll(cucumberThreadsOption)
+            args = cucumberOptionsAPI
         }
     }
 }
@@ -83,9 +89,25 @@ task tagged_api_tests() {
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
             systemProperty 'test_env', test_env
             systemProperty 'test_log_level', test_log_level
-            cucumberOptions.addAll(['--tags', tags])
-            if (setParallel == "true") cucumberOptions.addAll(cucumberThreadsOption)
-            args = cucumberOptions
+            cucumberOptionsAPI.addAll(['--tags', tags])
+            if (setParallel == "true") cucumberOptionsAPI.addAll(cucumberThreadsOption)
+            args = cucumberOptionsAPI
+        }
+    }
+}
+
+task tagged_ui_tests() {
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            systemProperty 'test_env', test_env
+            systemProperty 'test_log_level', test_log_level
+            systemProperty 'test_browser', test_browser
+            cucumberOptionsUI.addAll(['--tags', tags])
+            if (setParallel == "true") cucumberOptionsUI.addAll(cucumberThreadsOption)
+            args = cucumberOptionsUI
         }
     }
 }

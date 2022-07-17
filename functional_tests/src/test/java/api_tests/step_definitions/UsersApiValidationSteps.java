@@ -9,12 +9,13 @@ import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 import static org.junit.Assert.*;
 
-import dto.User;
-import utils.UserUtils;
+import api_tests.dto.User;
+import api_tests.utils.UserUtils;
 
 public class UsersApiValidationSteps {
     private static final Logger LOG = LoggerFactory.getLogger(UsersApiValidationSteps.class);

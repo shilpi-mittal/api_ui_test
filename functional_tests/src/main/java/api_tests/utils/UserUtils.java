@@ -1,12 +1,13 @@
-package utils;
+package api_tests.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
-import dto.User;
+import api_tests.dto.User;
 import constants.TestConstants;
 
 
@@ -57,6 +58,10 @@ public class UserUtils {
     // calls get User by ID API, and returns the JSON Response
     public static Response postUser(User user) throws JsonProcessingException {
         String path = getUsersApiPath();
-        return RestUtils.postRequest(path, JsonUtils.getJson(user));
+        return RestUtils.postRequest(path, getUserJson(user));
+    }
+
+    public static String getUserJson(User user) throws JsonProcessingException {
+        return JsonUtils.getObjectWriter().writeValueAsString(user);
     }
 }

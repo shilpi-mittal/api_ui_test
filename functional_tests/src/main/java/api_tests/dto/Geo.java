@@ -1,4 +1,4 @@
-package dto;
+package api_tests.dto;
 
 // // maps to Geo in User Address
 public class Geo {

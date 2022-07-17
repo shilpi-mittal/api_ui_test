@@ -1,0 +1,26 @@
+version: 2.1
+
+parameters:
+  parallel:
+    type: boolean
+    default: true
+
+jobs:
+  run_api_acceptance_tests:
+    docker:
+      - image: <image>
+    steps:
+      - checkout
+      - run:
+          name: Run API acceptance tests
+          command: |
+            ./gradlew build
+            ./gradlew api_acceptance_tests -Dparallel=<< pipeline.parameters.parallel >>
+      - store_artifacts:
+          path: build/reports/tests/test/index.html
+
+workflows:
+  version: 2
+  commit-workflow:
+    jobs:
+      - run_api_acceptance_tests
